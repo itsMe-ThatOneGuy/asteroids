@@ -4,9 +4,15 @@ from player import Player
 
 def main():
     pygame.init()
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
     clock = pygame.time.Clock()
     dt = 0
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+    drawable = pygame.sprite.Group()
+    updateable = pygame.sprite.Group()
+    Player.containers = (drawable, updateable)
+
     x = SCREEN_WIDTH / 2
     y = SCREEN_HEIGHT / 2
     player = Player(x, y)
@@ -16,10 +22,14 @@ def main():
             if event.type == pygame.QUIT:
                 return
 
-        player.update(dt)
+        for obj in updateable:
+            obj.update(dt)
 
         screen.fill("black")
-        player.draw(screen)
+
+        for obj in drawable:
+            obj.draw(screen)
+
         pygame.display.flip()
 
         dt = clock.tick(60) / 1000
